@@ -1,0 +1,108 @@
+html, body{
+    height: 100%;
+    background: #2c3e50;
+}
+
+.container-andromia-center {
+    height: 100%;
+    display:flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.content{
+    display: block;
+    width:100%;
+}
+
+.display-andromia {
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 0 !important;
+}
+
+.spacer {
+    height:3rem;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Opera and Firefox */
+}
+
+.header-location h4{
+    font-weight: 400 !important;
+}
+
+.runes-header .col-sm-1 img {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.runes-header .col-sm-1{
+    display:flex;
+    border-right: 1px solid #2ecc71;
+}
+
+.runes-header .col-sm-1:first-child{
+    border-left: 1px solid #2ecc71;
+}
+
+.runes-header .col-sm-1 p {
+    margin: auto; /* Important */ 
+    text-align: center; 
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+
+
+
+/* COLORS ------------------*/
+
+.primary-color {
+    color:#2ecc71;
+}
+
+.white {
+    color:white;
+}
+
+
+
+/* BUTTONS ----------------*/
+.btn-andromia {
+    background: #2ecc71;
+    color:white;
+}
+
+.btn-big{
+    width: 9rem;
+    height: 4rem;
+    font-size: 1.3rem;
+}
+
+.btn-andromia:hover {
+    background: #27ae60;
+    color:#ecf0f1;
+}
+
+/* FORM ------------------*/
+.form-andromia label{
+    font-size: 1.5rem;
+    color:white;
+}
+
+
+/* SPACING & CENTERING ----*/
+.center-andromia {
+    margin:0 auto;
+    display:block;
+    text-align: center;
+}
+
