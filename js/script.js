@@ -59,9 +59,6 @@ function loadMainInfoBlock(explorateur)
     
 
     let units = loadUnits(explorateur.units);
-    if(units != null) {
-        console.log(units);
-    }
     //let affinitesHTML = CreerAffinites(explorateur.units);
     //$("#affinites").append(affinitesHTML);
 
@@ -70,6 +67,7 @@ function loadMainInfoBlock(explorateur)
 
 }
 
+// Permet d'aller chercher les units
 function loadUnits(units)
 {
     $.ajax
@@ -80,9 +78,12 @@ function loadUnits(units)
             xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
         },
         success: function (data, status, xhr){
-            return data;
+            loadLastUnites(data);
+
+            // Appel pour loader tous les unités dans ton bloc
         },
         error: function(xhr, status, error){
+            console.log(xhr);
             return null;
         }
     });
@@ -110,19 +111,25 @@ function loadRunes(lienRunes)
 
 function loadLastUnites(units)
 {
-    var cardsShowcaseLast = "";
+    let cardsShowcaseLast = "";
+
+    if(units.length > 3)
+    {
+        let unitsTemp = [];
+        for(var i = units.length-1; i > units.length-4; i++)
+        {
+            unitsTemp.push(units[i]);
+        }
+        units = unitsTemp;
+    }
     for(var unit in units)
     {
         console.log(units[unit]);
         cardsShowcaseLast += '<div class="col-sm-4 card-box pd-5">';
         cardsShowcaseLast += '<div class="pd-5 darker-blue-bg">';
-        cardsShowcaseLast += `<img class="img-card" alt="${units[unit].affinity}" src="${units[unit].imageUrl}"/>`;
+        cardsShowcaseLast += `<img class="img-card" alt="${units[unit].affinity}" src="${units[unit].imageURL}"/>`;
         cardsShowcaseLast += "</div></div>";
     }
-    cardsShowcaseLast += '<div class="col-sm-4 card-box pd-5">';
-    cardsShowcaseLast += '<div class="pd-5 darker-blue-bg">';
-    cardsShowcaseLast += `<img class="img-card" alt="${units[0].affinity}" src="${units[0].imageUrl}"/>`;
-    cardsShowcaseLast += "</div></div>";
     $("#cards-showcase-last").append(cardsShowcaseLast);
 
     if(($(".img-card").width() * 1.62) > 324) {
