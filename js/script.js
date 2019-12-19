@@ -129,12 +129,6 @@ function loadLastUnites(units)
     }
     $("#cards-showcase-last").append(cardsShowcaseLast);
 
-    if(($(".img-card").width() * 1.62) > 324) {
-        $(".img-card").height(324);
-        $(".img-card").width(200);
-    } else
-        $(".img-card").height($(".img-card").width() * 1.62);
-
     console.log($(".img-card").attr("alt"));
     $(".img-card").mouseover(function(){ $(this).animate({ borderColor: COLOR_RUNES[$(this).attr("alt")]}, 'slow')});
     $(".img-card").mouseout(function(){ $(this).animate({borderColor:"#34495e"}, 'fast') });
