@@ -112,11 +112,15 @@ function loadRunes(lienRunes)
 function loadLastUnites(units)
 {
     let cardsShowcaseLast = "";
-
-    if(units.length > 2)
+    
+    if(units.length > 3)
     {
         let unitsTemp = [];
-
+        let compteur = 0;
+        for(var i = units.length-1; compteur < 3; compteur++){
+            unitsTemp.push(units[i]);
+            i--;
+        }
         units = unitsTemp;
     }
     for(var unit in units)
