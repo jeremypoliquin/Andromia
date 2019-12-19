@@ -1,10 +1,11 @@
 const URL_SERVEUR = "http://andromiaserver.us-3.evennode.com";
-const NOM_RUNES_FR = {air: "air", darkness: "Ténèbres", earth: "Terre", energy: "Énergie", fire: "Feu", life: "Vie", logic: "Logique", music: "Musique", space: "Espace", toxic: "Toxique", water: "Eau"};
-const COLOR_RUNES = {air: "#bdc3c7", darkness:"#8e44ad", earth:"#cd6133", energy: "#8e44ad", fire: "#e74c3c", life: "#2ecc71", logic:"#1abc9c", music: "#e84393", space: "#130f40", toxic: "#8e44ad", water: "#3498db"}
-
+const NOM_RUNES_FR = {air: "air", darkness: "Ténèbres", earth: "Terre", energy: "Énergie", fire: "Feu", life: "Vie", light: "Lumière", logic: "Logique", music: "Musique", space: "Espace", toxic: "Toxique", water: "Eau"};
+const COLOR_RUNES = {air: "#bdc3c7", darkness:"#8e44ad", earth:"#cd6133", energy: "#8e44ad", fire: "#e74c3c", life: "#2ecc71",light: "#f6e58d", logic:"#1abc9c", music: "#e84393", space: "#130f40", toxic: "#8e44ad", water: "#3498db"}
+let access_token;
 
 $( document ).ready(function() {
     var lastScrollTop = 0;
+    access_token = localStorage.getItem("andromia");
     prepareListener("profile");
     prepareListener("map");
     prepareListener("units");
@@ -25,28 +26,86 @@ $( document ).ready(function() {
 
 function RetrieveGlobalInfo(id)
 {
-    let url = URL_SERVEUR + "/explorateurs/" + id;
+    let urlRetrieve = URL_SERVEUR + "/explorateurs/";
     let req = new XMLHttpRequest();
-
+    
+    $.ajax
+    ({
+        type: "GET",
+        url: urlRetrieve,
+        beforeSend : function( xhr ) {
+            xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
+        },
+        success: function (data, status, xhr){
+            console.log(data[0]);
+            loadMainInfoBlock(data[0]); 
+        },
+        error: function(xhr, status, error){
+            console.log(xhr);
+            console.log("echec");
+        }
+    });
+    /*
     $.get(url, function(explorateur){
         loadMainInfoBlock(explorateur);
-    });
+    });*/
 }
 
 function loadMainInfoBlock(explorateur)
 {
-    let affinitesHTML = CreerAffinites(explorateur.units);
-    $("#affinites").append(affinitesHTML);
     $("#inox").text(explorateur.inox + " Inox");
     $("#location").text("Location: " + explorateur.location);
     $("#bienvenue").text("Bienvenue sur Andromia, " + explorateur.nom);
-    $("#nbrUnites").text(explorateur.units.length);
+    
 
-    loadLastUnites(explorateur.units);
-   
-    for(let runes in explorateur.runes)
-        $("#runes-"+runes).text(explorateur.runes[runes]);
+    let units = loadUnits(explorateur.units);
+    if(units != null) {
+        console.log(units);
+    }
+    //let affinitesHTML = CreerAffinites(explorateur.units);
+    //$("#affinites").append(affinitesHTML);
 
+    //loadLastUnites(explorateur.units);
+    loadRunes(explorateur.runes);
+
+}
+
+function loadUnits(units)
+{
+    $.ajax
+    ({
+        type: "GET",
+        url: units.href,
+        beforeSend : function( xhr ) {
+            xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
+        },
+        success: function (data, status, xhr){
+            return data;
+        },
+        error: function(xhr, status, error){
+            return null;
+        }
+    });
+}
+
+function loadRunes(lienRunes)
+{
+    $.ajax
+    ({
+        type: "GET",
+        url: lienRunes.href,
+        beforeSend : function( xhr ) {
+            xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
+        },
+        success: function (data, status, xhr){
+            for(let runes in data)
+                $("#runes-"+runes).text(data[runes]);
+        },
+        error: function(xhr, status, error){
+            for(let runes in NOM_RUNES_FR)
+                $("#runes-"+runes).text(0);
+        }
+    });
 }
 
 function loadLastUnites(units)
