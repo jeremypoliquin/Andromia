@@ -7,7 +7,14 @@ $( document ).ready(function() {
     var lastScrollTop = 0;
     prepareListener("profile");
     prepareListener("map");
+    prepareListener("units");
     RetrieveGlobalInfo("1");
+
+    if(($(".img-card").width() * 1.62) > 324) {
+        $(".img-card").height(324);
+        $(".img-card").width(200);
+    } else
+        $(".img-card").height($(".img-card").width() * 1.62);
     
     $("#disconnect").click(function(){
         localStorage.removeItem("andromia");
@@ -130,11 +137,39 @@ function prepareListener(name)
 
         if(name == "profile")
         {
-            $("#goto-map").removeClass("toWhite").addClass("toTransparent");
+            if ($("#goto-map").hasClass("toWhite"))
+            {
+                $("#goto-map").removeClass("toWhite").addClass("toTransparent");
+            }
+            else if ($("#goto-units").hasClass("toWhite"))
+            {
+                $("#goto-units").removeClass("toWhite").addClass("toTransparent");
+            }
             prepareListener("map");
+            prepareListener("units");
         } else if(name == "map")
         {
-            $("#goto-profile").removeClass("toWhite").addClass("toTransparent");
+            if ($("#goto-profile").hasClass("toWhite"))
+            {
+                $("#goto-profile").removeClass("toWhite").addClass("toTransparent");
+            }
+            else if ($("#goto-units").hasClass("toWhite"))
+            {
+                $("#goto-units").removeClass("toWhite").addClass("toTransparent");
+            }
+            prepareListener("profile");
+            prepareListener("units");
+        } else if (name =="units")
+        {
+            if ($("#goto-map").hasClass("toWhite"))
+            {
+                $("#goto-map").removeClass("toWhite").addClass("toTransparent");
+            }
+            else if ($("#goto-profile").hasClass("toWhite"))
+            {
+                $("#goto-profile").removeClass("toWhite").addClass("toTransparent");
+            } 
+            prepareListener("map");
             prepareListener("profile");
         }
         scrollToAnchor(name);
@@ -144,7 +179,7 @@ function prepareListener(name)
 
 function scrollToAnchor(anchor_id)
 {   
-    var tag = $("#"+anchor_id+"");
+    var tag = $("#"+anchor_id);
     $('html,body').animate({scrollTop: tag.offset().top},1000);
 }
 
