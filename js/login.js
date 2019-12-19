@@ -11,8 +11,7 @@ $(document).ready(function(){
         localStorage.removeItem("successDisconnect");
         $("#success").text("Déconnexion réussie!").show();
     }
-
-
+    
     $(".form-andromia").submit(function (e) {
         e.preventDefault();
 
