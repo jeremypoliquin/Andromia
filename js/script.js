@@ -113,13 +113,10 @@ function loadLastUnites(units)
 {
     let cardsShowcaseLast = "";
 
-    if(units.length > 3)
+    if(units.length > 2)
     {
         let unitsTemp = [];
-        for(var i = units.length-1; i > units.length-4; i++)
-        {
-            unitsTemp.push(units[i]);
-        }
+
         units = unitsTemp;
     }
     for(var unit in units)
