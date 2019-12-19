@@ -1,3 +1,151 @@
+const URL_SERVEUR = "http://andromiaserver.us-3.evennode.com";
+const NOM_RUNES_FR = {air: "air", darkness: "Ténèbres", earth: "Terre", energy: "Énergie", fire: "Feu", life: "Vie", logic: "Logique", music: "Musique", space: "Espace", toxic: "Toxique", water: "Eau"};
+const COLOR_RUNES = {air: "#bdc3c7", darkness:"#8e44ad", earth:"#cd6133", energy: "#8e44ad", fire: "#e74c3c", life: "#2ecc71", logic:"#1abc9c", music: "#e84393", space: "#130f40", toxic: "#8e44ad", water: "#3498db"}
+
+
 $( document ).ready(function() {
-    console.log( "ready!" );
+    var lastScrollTop = 0;
+    prepareListener("profile");
+    prepareListener("map");
+    RetrieveGlobalInfo("1");
+    
+    $("#disconnect").click(function(){
+        localStorage.removeItem("andromia");
+        window.localStorage.setItem("successDisconnect", "déconnexion");
+        window.location = "login.html";
+    });
 });
+
+function RetrieveGlobalInfo(id)
+{
+    let url = URL_SERVEUR + "/explorateurs/" + id;
+    let req = new XMLHttpRequest();
+
+    $.get(url, function(explorateur){
+        loadMainInfoBlock(explorateur);
+    });
+}
+
+function loadMainInfoBlock(explorateur)
+{
+    let affinitesHTML = CreerAffinites(explorateur.units);
+    $("#affinites").append(affinitesHTML);
+    $("#inox").text(explorateur.inox + " Inox");
+    $("#location").text("Location: " + explorateur.location);
+    $("#bienvenue").text("Bienvenue sur Andromia, " + explorateur.nom);
+    $("#nbrUnites").text(explorateur.units.length);
+
+    loadLastUnites(explorateur.units);
+   
+    for(let runes in explorateur.runes)
+        $("#runes-"+runes).text(explorateur.runes[runes]);
+
+}
+
+function loadLastUnites(units)
+{
+    var cardsShowcaseLast = "";
+    for(var unit in units)
+    {
+        console.log(units[unit]);
+        cardsShowcaseLast += '<div class="col-sm-4 card-box pd-5">';
+        cardsShowcaseLast += '<div class="pd-5 darker-blue-bg">';
+        cardsShowcaseLast += `<img class="img-card" alt="${units[unit].affinity}" src="${units[unit].imageUrl}"/>`;
+        cardsShowcaseLast += "</div></div>";
+    }
+    cardsShowcaseLast += '<div class="col-sm-4 card-box pd-5">';
+    cardsShowcaseLast += '<div class="pd-5 darker-blue-bg">';
+    cardsShowcaseLast += `<img class="img-card" alt="${units[0].affinity}" src="${units[0].imageUrl}"/>`;
+    cardsShowcaseLast += "</div></div>";
+    $("#cards-showcase-last").append(cardsShowcaseLast);
+
+    if(($(".img-card").width() * 1.62) > 324) {
+        $(".img-card").height(324);
+        $(".img-card").width(200);
+    } else
+        $(".img-card").height($(".img-card").width() * 1.62);
+
+    console.log($(".img-card").attr("alt"));
+    $(".img-card").mouseover(function(){ $(this).animate({ borderColor: COLOR_RUNES[$(this).attr("alt")]}, 'slow')});
+    $(".img-card").mouseout(function(){ $(this).animate({borderColor:"#34495e"}, 'fast') });
+}
+
+function CreerAffinites(units)
+{
+    var arrayComparAffinity = {air:0,darkness:0,earth:0,energy:0,fire:0,life:0,light:0,logic:0,music:0,space:0,toxic:0,water:0};
+
+    units.forEach(unit => {
+        arrayComparAffinity[unit.affinity] += 1;
+    });
+
+    var topThree = {first:0, firstStr:"", second:0, secondStr:"", third:0, thirdStr:"" };
+
+    for(var rune in arrayComparAffinity) {
+        runeValue = arrayComparAffinity[rune];
+        if(runeValue > topThree.first) {
+            topThree.thirdStr = topThree.secondStr;
+            topThree.third = topThree.second;
+            topThree.secondStr = topThree.firstStr;
+            topThree.second = topThree.first;
+            topThree.firstStr = rune;
+            topThree.first = runeValue;
+        } else if(runeValue > topThree.second) {
+            topThree.thirdStr = topThree.secondStr;
+            topThree.third = topThree.second;
+            topThree.secondStr = rune;
+            topThree.second = runeValue;
+        } else if(runeValue > topThree.third)
+            topThree.thirdStr = rune;
+            topThree.third = runeValue;
+    }
+
+    let affinitesHTML = "";
+    
+    if(topThree.firstStr != "") {
+        affinitesHTML += '<li>';
+        affinitesHTML += `<span><img src="img/runes/lighter/${topThree.firstStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
+        affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.firstStr]}</p>`;
+        affinitesHTML += '</li>';
+        if(topThree.secondStr != "") {
+            affinitesHTML += '<li>';
+            affinitesHTML += `<span><img src="img/runes/lighter/${topThree.secondStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
+            affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.secondStr]}</p>`;
+            affinitesHTML += '</li>';
+            if(topThree.thirdStr != "") {
+                affinitesHTML += '<li>';
+                affinitesHTML += `<span><img src="img/runes/lighter/${topThree.thirdStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
+                affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.thirdStr]}</p>`;
+                affinitesHTML += '</li>';
+            }
+        }
+    }
+    return affinitesHTML;
+}
+
+
+function prepareListener(name)
+{
+    $(`#goto-${name}`).click(function(){
+        $(this).removeClass("toTransparent").addClass("toWhite");
+
+        if(name == "profile")
+        {
+            $("#goto-map").removeClass("toWhite").addClass("toTransparent");
+            prepareListener("map");
+        } else if(name == "map")
+        {
+            $("#goto-profile").removeClass("toWhite").addClass("toTransparent");
+            prepareListener("profile");
+        }
+        scrollToAnchor(name);
+        $(this).off();
+    });
+}
+
+function scrollToAnchor(anchor_id)
+{   
+    var tag = $("#"+anchor_id+"");
+    $('html,body').animate({scrollTop: tag.offset().top},1000);
+}
+
+// ANIMATION

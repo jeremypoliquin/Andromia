@@ -7,89 +7,131 @@
     <title>Andromia - Menu Principal</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
+    <script>
+        if(!localStorage.getItem("andromia")){
+            window.location = "login.html";
+        }
+    </script>
 </head>
 <body>
-    <div class="container">
-        <div class="row mt-3 primary-color">
-            <div class="col-sm-4">
-                <h1 class="display-andromia">ANDROMIA</h1>
-            </div>
-            <div class="col-sm-4"></div>
-            <div class="col-sm-4">
-                <button class="btn btn-andromia spacer float-right">Déconnexion</button>
-            </div>
-        </div>
-        <div class="header-info">
-            <div class="row runes-header mt-4 noselect">
-                    <div class="col-sm-1">
-                        <img src="img/runes/air.svg" alt="Rune d'air"/>
-                        <p>21</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/darkness.svg" alt="Rune de ténèbre"/>
-                        <p>333</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/earth.svg" alt="Rune d'air"/>
-                        <p>2</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/energy.svg" alt="Rune d'air"/>
-                        <p>21</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/fire.svg" alt="Rune d'air"/>
-                        <p>33</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/life.svg" alt="Rune d'air"/>
-                        <p>47</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/light.svg" alt="Rune d'air"/>
-                        <p>38</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/logic.svg" alt="Rune d'air"/>
-                        <p>99</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/music.svg" alt="Rune d'air"/>
-                        <p>76</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/space.svg" alt="Rune d'air"/>
-                        <p>83</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/toxic.svg" alt="Rune d'air"/>
-                        <p>1</p>
-                    </div>
-                    <div class="col-sm-1">
-                        <img src="img/runes/water.svg" alt="Rune d'air"/>
-                        <p>7</p>
-                    </div>
-                </div>
-                <div class="row noselect mt-2 header-location">
-                    <div class="col-sm-3">
-                        <h4>Inox: 3000</h4>
-                    </div>
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-3 text-right">
-                        <h4>Location: Bézantur</h4>
-                </div>
-            </div>
-        </div>
+    <div class="aside aside-right white ">
         
+        <ul>
+            <li><img id="disconnect" src="img/unplugged.svg"/></li>
+            <li id="inox">Inox: 3000</li>
+            <li id="location">Location: Bézantur</li>
+            <li><button id="goto-profile" class="toWhite"></button></li>
+            <li><button id="goto-map"></button></li>
+            <li><button id="goto"></button></li>
+        </ul>
     </div>
 
+    <div class="aside aside-left">
+            <div class="andromia-box white-box">
+                <h5 class="rounded-border-pad darker-white-bg width-100">Vos runes</h5>
+                <ul>
+                    <li><img src="img/runes/air.svg" alt="Rune"/><p id="runes-air"></p></li>
+                    <li><img src="img/runes/darkness.svg" alt="Rune"/> <p id="runes-darkness"></p></li>
+                    <li><img src="img/runes/earth.svg" alt="Rune"/> <p id="runes-earth"></p></li>
+                    <li><img src="img/runes/energy.svg" alt="Rune"/> <p id="runes-energy"></p></li>
+                    <li><img src="img/runes/fire.svg" alt="Rune"/> <p id="runes-fire"></p></li>
+                    <li><img src="img/runes/life.svg" alt="Rune"/> <p id="runes-life"></p></li>
+                    <li><img src="img/runes/light.svg" alt="Rune"/> <p id="runes-light"></p></li>
+                    <li><img src="img/runes/logic.svg" alt="Rune"/> <p id="runes-logic"></p></li>
+                    <li><img src="img/runes/music.svg" alt="Rune"/> <p id="runes-music"></p></li>
+                    <li><img src="img/runes/space.svg" alt="Rune"/> <p id="runes-space"></p></li>
+                    <li><img src="img/runes/toxic.svg" alt="Rune"/> <p id="runes-toxic"></p> </li>
+                    <li><img src="img/runes/water.svg" alt="Rune"/> <p id="runes-water"></p></li>
+                </ul>
+            </div>
+        </div>
+    <div class="container-andromia" id="profile">
+        <div class="row mt-4">
+            <div class="col-sm-12 col-md-6">
+                <div class="turquoise-box  andromia-box">
+                    <div class="center-box">
+                        <img src="img/user.svg" class="circle dark-turquoise-bg center-andromia med-img" alt="exploration"/>
+                        <h3 class="mt-2 rounded-border-pad dark-turquoise-bg width-100" id="bienvenue"></h3>
+                    </div>
+                    <div class="row three-row-desc">
+                        <div class="class col-sm-4 center-andromia">
+                            <img src="img/calendar.svg" class="small-img circle dark-turquoise-bg" alt="exploration"/>
+                            <p>Explorateur depuis:</p>
+                            <h5>2019-12-04</h5>
+                        </div>
+                        <div class="class col-sm-4 center-andromia">
+                            <img src="img/binoculars.svg" class="small-img circle dark-turquoise-bg" alt="exploration"/>
+                            <p>Explorations réalisés:</p>
+                            <h5>5</h5>
 
-
-
+                        </div>
+                        <div class="class col-sm-4 center-andromia">
+                            <img src="img/backup.svg" class="small-img circle dark-turquoise-bg" alt="exploration"/>
+                            <p>Nombre d'unités: </p>
+                            <h5 id="nbrUnites">0</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="red-box andromia-box">
+                    <h3 class="rounded-border-pad dark-red-color-bg width-100">Vos dernières activités</h3>
+                    <ul class="feature-list feature-list-mt" >
+                        <li>
+                            <img src="img/binoculars.svg" class="small-img circle dark-red-color-bg" alt="exploration"/>
+                            <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Exploration réalisé!</p>
+                        </li>
+                        <li> 
+                            <img src="img/portal.svg" class="small-img circle dark-red-color-bg" alt="portail"/>
+                            <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Vous avez découvert un portail!</p>
+                        </li>
+                        <li>
+                            <img src="img/mighty-force.svg" class="small-img circle dark-red-color-bg" alt="hero"/>
+                            <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Vous avez découvert une unité!</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-sm-3">
+                <div class="yellow-box andromia-box">
+                    <h3 class="rounded-border-pad dark-yellow-bg width-100">Vos affinités</h5>
+                    <ol class="feature-list feature-list-mt" id="affinites">
+                        
+                    </ol>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="blue-box andromia-box">
+                    <h3 class="rounded-border-pad darker-blue-bg width-100">Vos dernières unités</h5> 
+                    <div class="row pd-5" id="cards-showcase-last">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-andromia" id="map">
+        <div class="row mt-4">
+            <div class="col-sm-12 mt-4 mb-4">
+                <div class="blue-box white andromia-box">
+                    <h3 class="rounded-border-pad darker-blue-bg width-100">Le monde d'Andromia</h3>
+                    <img src="img/map.png" alt="map" class="img-width rounded-border-pad text-center"/>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
+    <script
+    src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+    integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+    crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <!-- include Google's AJAX API loader -->
     <script src="js/script.js"></script>
 </body>
 </html>
