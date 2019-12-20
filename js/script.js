@@ -9,7 +9,7 @@ $( document ).ready(function() {
     prepareListener("profile");
     prepareListener("map");
     prepareListener("units");
-    RetrieveGlobalInfo("1");
+    RetrieveGlobalInfo();
 
     if(($(".img-card").width() * 1.62) > 324) {
         $(".img-card").height(324);
@@ -24,7 +24,7 @@ $( document ).ready(function() {
     });
 });
 
-function RetrieveGlobalInfo(id)
+function RetrieveGlobalInfo()
 {
     let urlRetrieve = URL_SERVEUR + "/explorateurs/";
     let req = new XMLHttpRequest();
@@ -37,7 +37,6 @@ function RetrieveGlobalInfo(id)
             xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
         },
         success: function (data, status, xhr){
-            console.log(data[0]);
             loadMainInfoBlock(data[0]); 
         },
         error: function(xhr, status, error){
@@ -56,15 +55,66 @@ function loadMainInfoBlock(explorateur)
     $("#inox").text(explorateur.inox + " Inox");
     $("#location").text("Location: " + explorateur.location);
     $("#bienvenue").text("Bienvenue sur Andromia, " + explorateur.nom);
-    
+    let dateCreate = new Date(explorateur.dateCreation);
+    $("#tempsMembre").text(
+        dateCreate.getFullYear() 
+        +"-"+ 
+        (dateCreate.getMonth()+1) 
+        +"-"+
+        dateCreate.getDate()
+    );
 
-    let units = loadUnits(explorateur.units);
+    loadUnits(explorateur.units);
     //let affinitesHTML = CreerAffinites(explorateur.units);
     //$("#affinites").append(affinitesHTML);
 
     //loadLastUnites(explorateur.units);
+    loadExplorations(explorateur.explorations);
     loadRunes(explorateur.runes);
+    
 
+}
+
+function loadExplorations(explorations)
+{
+    $.ajax
+    ({
+        type: "GET",
+        url: explorations.href,
+        beforeSend : function( xhr ) {
+            xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
+        },
+        success: function (data, status, xhr){
+            $("#nbrExplo").text(data.length);
+            console.log(data);
+
+            // Appel pour loader tous les unités dans ton bloc
+        },
+        error: function(xhr, status, error){
+            console.log(xhr);
+        }
+    });
+    
+    // Laisser ça la
+    /* 
+    $.ajax
+    ({
+        type: "GET",
+        url: "http://andromiaserver.us-3.evennode.com/units/5dfc04d29b8a95001ed86159",
+        beforeSend : function( xhr ) {
+            xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
+        },
+        success: function (data, status, xhr){
+            console.log(data);
+
+            // Appel pour loader tous les unités dans ton bloc
+        },
+        error: function(xhr, status, error){
+            console.log(xhr);
+        }
+    });*/
+
+    
 }
 
 // Permet d'aller chercher les units
@@ -78,6 +128,7 @@ function loadUnits(units)
             xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
         },
         success: function (data, status, xhr){
+            $("#nbrUnites").text(data.length);
             loadLastUnites(data);
 
             // Appel pour loader tous les unités dans ton bloc
@@ -112,6 +163,7 @@ function loadRunes(lienRunes)
 function loadLastUnites(units)
 {
     let cardsShowcaseLast = "";
+
     
     if(units.length > 3)
     {
