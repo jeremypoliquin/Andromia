@@ -6,9 +6,6 @@ let access_token;
 $( document ).ready(function() {
     var lastScrollTop = 0;
     access_token = localStorage.getItem("andromia");
-    prepareListener("profile");
-    prepareListener("map");
-    prepareListener("units");
     RetrieveGlobalInfo("1");
     
     $("#disconnect").click(function(){
@@ -291,106 +288,6 @@ function loadAllUnites(units)
         $(".modal-body").html(cardDetails);
          
         $(".modal").modal('show');
-    });
-}
-
-function CreerAffinites(units)
-{
-    var arrayComparAffinity = {air:0,darkness:0,earth:0,energy:0,fire:0,life:0,light:0,logic:0,music:0,space:0,toxic:0,water:0};
-
-    units.forEach(unit => {
-        arrayComparAffinity[unit.affinity] += 1;
-    });
-
-    var topThree = {first:0, firstStr:"", second:0, secondStr:"", third:0, thirdStr:"" };
-
-    for(var rune in arrayComparAffinity) {
-        runeValue = arrayComparAffinity[rune];
-        if(runeValue > topThree.first) {
-            topThree.thirdStr = topThree.secondStr;
-            topThree.third = topThree.second;
-            topThree.secondStr = topThree.firstStr;
-            topThree.second = topThree.first;
-            topThree.firstStr = rune;
-            topThree.first = runeValue;
-        } else if(runeValue > topThree.second) {
-            topThree.thirdStr = topThree.secondStr;
-            topThree.third = topThree.second;
-            topThree.secondStr = rune;
-            topThree.second = runeValue;
-        } else if(runeValue > topThree.third)
-            topThree.thirdStr = rune;
-            topThree.third = runeValue;
-    }
-
-    let affinitesHTML = "";
-    
-    if(topThree.firstStr != "") {
-        affinitesHTML += '<li>';
-        affinitesHTML += `<span><img src="img/runes/lighter/${topThree.firstStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
-        affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.firstStr] } (${topThree.first} unités)</p>`;
-        affinitesHTML += '</li>';
-        if(topThree.secondStr != "") {
-            affinitesHTML += '<li>';
-            affinitesHTML += `<span><img src="img/runes/lighter/${topThree.secondStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
-            affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.secondStr]} (${topThree.second} unités)</p>`;
-            affinitesHTML += '</li>';
-            if(topThree.thirdStr != "") {
-                affinitesHTML += '<li>';
-                affinitesHTML += `<span><img src="img/runes/lighter/${topThree.thirdStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
-                affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.thirdStr]} (${topThree.third} unités)</p>`;
-                affinitesHTML += '</li>';
-            }
-        }
-    }
-    return affinitesHTML;
-}
-
-
-function prepareListener(name)
-{
-    $(`#goto-${name}`).click(function(){
-        $(this).removeClass("toTransparent").addClass("toWhite");
-
-        if(name == "profile")
-        {
-            if ($("#goto-map").hasClass("toWhite"))
-            {
-                $("#goto-map").removeClass("toWhite").addClass("toTransparent");
-            }
-            else if ($("#goto-units").hasClass("toWhite"))
-            {
-                $("#goto-units").removeClass("toWhite").addClass("toTransparent");
-            }
-            prepareListener("map");
-            prepareListener("units");
-        } else if(name == "map")
-        {
-            if ($("#goto-profile").hasClass("toWhite"))
-            {
-                $("#goto-profile").removeClass("toWhite").addClass("toTransparent");
-            }
-            else if ($("#goto-units").hasClass("toWhite"))
-            {
-                $("#goto-units").removeClass("toWhite").addClass("toTransparent");
-            }
-            prepareListener("profile");
-            prepareListener("units");
-        } else if (name =="units")
-        {
-            if ($("#goto-map").hasClass("toWhite"))
-            {
-                $("#goto-map").removeClass("toWhite").addClass("toTransparent");
-            }
-            else if ($("#goto-profile").hasClass("toWhite"))
-            {
-                $("#goto-profile").removeClass("toWhite").addClass("toTransparent");
-            } 
-            prepareListener("map");
-            prepareListener("profile");
-        }
-        scrollToAnchor(name);
-        $(this).off();
     });
 }
 
