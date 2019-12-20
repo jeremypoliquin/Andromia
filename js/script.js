@@ -9,13 +9,7 @@ $( document ).ready(function() {
     prepareListener("profile");
     prepareListener("map");
     prepareListener("units");
-    RetrieveGlobalInfo();
-
-    if(($(".img-card").width() * 1.62) > 324) {
-        $(".img-card").height(324);
-        $(".img-card").width(200);
-    } else
-        $(".img-card").height($(".img-card").width() * 1.62);
+    RetrieveGlobalInfo("1");
     
     $("#disconnect").click(function(){
         localStorage.removeItem("andromia");
@@ -69,7 +63,7 @@ function loadMainInfoBlock(explorateur)
     loadRunes(explorateur.runes);
     
 
-}
+    let units = loadUnits(explorateur.units);
 
 function loadExplorations(explorations)
 {
@@ -183,9 +177,7 @@ function loadUnits(units)
             $("#nbrUnites").text(data.length);
             console.log(data);
             loadLastUnites(data);
-            let affinitesHTML = CreerAffinites(data);
-            $("#affinites").append(affinitesHTML);
-            // Appel pour loader tous les unités dans ton bloc
+            loadAllUnites(data);
         },
         error: function(xhr, status, error){
             console.log(xhr);
@@ -231,17 +223,76 @@ function loadLastUnites(units)
     }
     for(var unit in units)
     {
-        console.log(units[unit]);
+        var valNew = units[unit].href.split('/');
+        var id = valNew[4];
         cardsShowcaseLast += '<div class="col-sm-4 card-box pd-5">';
         cardsShowcaseLast += '<div class="pd-5 darker-blue-bg">';
-        cardsShowcaseLast += `<img class="img-card" alt="${units[unit].affinity}" src="${units[unit].imageURL}"/>`;
+        cardsShowcaseLast += '<h6 class="text-center font-weight-bold mb-3"><u>'+ units[unit].name +'</u></h6>';
+        cardsShowcaseLast += `<div><img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}"/></div>`;
         cardsShowcaseLast += "</div></div>";
     }
     $("#cards-showcase-last").append(cardsShowcaseLast);
+}
 
-    console.log($(".img-card").attr("alt"));
-    $(".img-card").mouseover(function(){ $(this).animate({ borderColor: COLOR_RUNES[$(this).attr("alt")]}, 'slow')});
-    $(".img-card").mouseout(function(){ $(this).animate({borderColor:"#34495e"}, 'fast') });
+function loadAllUnites(units)
+{
+    let cards = "";
+    for(var unit in units)
+    {
+        var valNew = units[unit].href.split('/');
+        var id = valNew[4];
+        cards += '<div class="col-sm-4 card-box pd-5">';
+        cards += '<div class="pd-5 darker-blue-bg">';
+        cards += '<h5 class="text-center font-weight-bold mb-3"><u>'+ units[unit].name +'</u></h5>';
+        cards += `<div><img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}"/></div>`;
+        cards += "</div></div>";
+    }
+    $("#cards").append(cards);
+
+    $(".img-card").mouseover(function(){ 
+
+        $(this).animate({ borderColor: COLOR_RUNES[$(this).attr("alt")]}, 'slow');
+        $(this).animate({opacity: 0.5}, 500);
+    });
+
+    $(".img-card").mouseout(function(){ 
+
+        $(this).animate({borderColor:"#34495e"}, 'fast');
+        $(this).animate({opacity: 1.0}, 500);
+    });
+
+    // Section pour afficher les détails d'une unit : 
+    $(".img-card").click(function() {
+
+        let cardDetails = "";
+
+        for(var unit in units)
+        {
+            var valNew = units[unit].href.split('/');
+            var id = valNew[4];
+            if ($(this).attr("id") == id) {
+
+                $("#modalCarteCentreTitre").html(units[unit].name);                
+                var i = 1;
+                for (var x = 0; x < units[unit].life; x++) {
+
+                    cardDetails += ` <img class="img-card" alt="vie${x}" src="img/heart.svg" width="10%" height="5%"/>`;
+
+                    if (i == 8) {                        
+                        cardDetails += "<br>"; 
+                        i = 0;
+                    }
+
+                    i++;
+                }
+                cardDetails += `<img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}" width="75%" height="50%"/>`;
+            }
+        }
+
+        $(".modal-body").html(cardDetails);
+         
+        $(".modal").modal('show');
+    });
 }
 
 function CreerAffinites(units)
@@ -350,5 +401,4 @@ function scrollToAnchor(anchor_id)
     var tag = $("#"+anchor_id);
     $('html,body').animate({scrollTop: tag.offset().top},1000);
 }
-
-// ANIMATION
+}
