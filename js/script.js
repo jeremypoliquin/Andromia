@@ -18,7 +18,7 @@ $( document ).ready(function() {
     });
 });
 
-function RetrieveGlobalInfo(id)
+function RetrieveGlobalInfo()
 {
     let urlRetrieve = URL_SERVEUR + "/explorateurs/";
     let req = new XMLHttpRequest();
@@ -31,7 +31,6 @@ function RetrieveGlobalInfo(id)
             xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
         },
         success: function (data, status, xhr){
-            console.log(data[0]);
             loadMainInfoBlock(data[0]); 
         },
         error: function(xhr, status, error){
@@ -50,13 +49,118 @@ function loadMainInfoBlock(explorateur)
     $("#inox").text(explorateur.inox + " Inox");
     $("#location").text("Location: " + explorateur.location);
     $("#bienvenue").text("Bienvenue sur Andromia, " + explorateur.nom);
+    let dateCreate = new Date(explorateur.dateCreation);
+    $("#tempsMembre").text(
+        dateCreate.getFullYear() 
+        +"-"+ 
+        (dateCreate.getMonth()+1) 
+        +"-"+
+        dateCreate.getDate()
+    );
+
+    loadUnits(explorateur.units);
+    loadExplorations(explorateur.explorations);
+    loadRunes(explorateur.runes);
     
 
     let units = loadUnits(explorateur.units);
 
-    //loadLastUnites(explorateur.units);
-    loadRunes(explorateur.runes);
+function loadExplorations(explorations)
+{
+    $.ajax
+    ({
+        type: "GET",
+        url: explorations.href,
+        beforeSend : function( xhr ) {
+            xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
+        },
+        success: function (data, status, xhr){
+            $("#nbrExplo").text(data.length);
+            console.log(data);
+            loadActivites(data);
 
+            // Appel pour loader tous les unités dans ton bloc
+        },
+        error: function(xhr, status, error){
+            console.log(xhr);
+        }
+    });
+    
+    // Laisser ça la
+    /*
+    $.ajax
+    ({
+        type: "GET",
+        url: "http://andromiaserver.us-3.evennode.com/units/5dfc04d09b8a95001ed8614a",
+        beforeSend : function( xhr ) {
+            xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
+        },
+        success: function (data, status, xhr){
+            console.log(data);
+
+            // Appel pour loader tous les unités dans ton bloc
+        },
+        error: function(xhr, status, error){
+            console.log(xhr);
+        }
+    });*/
+}
+
+function loadActivites(explorations)
+{
+    let activitesShowcase = "";
+
+    if(explorations.length > 3)
+    {
+        let exploTemp = [];
+        exploTemp.push(explorations[explorations.length-1], explorations[explorations.length-2], explorations[explorations.length-3] );
+        explorations = exploTemp;
+    }
+
+    let compteurContenu = 0;
+
+    for(var exploration in explorations)
+    {
+        var dateExplo = new Date(explorations[exploration].dateExploration);
+        console.log(exploration);
+        var dateExploStr =  dateExplo.getFullYear() 
+                            +"-"+ 
+                            (dateExplo.getMonth()+1) 
+                            +"-"+
+                            dateExplo.getDate();
+        if(explorations[exploration].unit != null && explorations[exploration].unit != undefined) {
+            activitesShowcase += "<li>";
+            activitesShowcase += `<img src="img/mighty-force.svg" class="small-img circle dark-red-color-bg" alt="hero"/>`;
+            activitesShowcase += `<p class="rounded-border dark-red-color-bg width-100"><span>${dateExploStr}:</span> Vous avez découvert une unité!</p>`;
+            activitesShowcase += "</li>";
+            compteurContenu++;
+            if(compteurContenu == 3)
+                break;
+        }
+        activitesShowcase += "<li>";
+        activitesShowcase += '<img src="img/binoculars.svg" class="small-img circle dark-red-color-bg" alt="exploration"/>';
+        activitesShowcase += `<p class="rounded-border dark-red-color-bg width-100"><span>${dateExploStr}:</span> Exploration réalisée!</p>`;
+        activitesShowcase += "</li>";
+        compteurContenu++;
+        if(compteurContenu == 3)
+                break;
+    }
+    
+    $("#activites").append(activitesShowcase);
+    
+    /*
+    <li>
+        <img src="img/binoculars.svg" class="small-img circle dark-red-color-bg" alt="exploration"/>
+        <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Exploration réalisé!</p>
+    </li>
+    <li> 
+        <img src="img/portal.svg" class="small-img circle dark-red-color-bg" alt="portail"/>
+        <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Vous avez découvert un portail!</p>
+    </li>
+    <li>
+        <img src="img/mighty-force.svg" class="small-img circle dark-red-color-bg" alt="hero"/>
+        <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Vous avez découvert une unité!</p>
+    </li>*/
 }
 
 // Permet d'aller chercher les units
@@ -70,6 +174,7 @@ function loadUnits(units)
             xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
         },
         success: function (data, status, xhr){
+            $("#nbrUnites").text(data.length);
             loadLastUnites(data);
             loadAllUnites(data);
         },
@@ -103,6 +208,7 @@ function loadRunes(lienRunes)
 function loadLastUnites(units)
 {
     let cardsShowcaseLast = "";
+
     
     if(units.length > 3)
     {
@@ -222,17 +328,17 @@ function CreerAffinites(units)
     if(topThree.firstStr != "") {
         affinitesHTML += '<li>';
         affinitesHTML += `<span><img src="img/runes/lighter/${topThree.firstStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
-        affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.firstStr]}</p>`;
+        affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.firstStr] } (${topThree.first} unités)</p>`;
         affinitesHTML += '</li>';
         if(topThree.secondStr != "") {
             affinitesHTML += '<li>';
             affinitesHTML += `<span><img src="img/runes/lighter/${topThree.secondStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
-            affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.secondStr]}</p>`;
+            affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.secondStr]} (${topThree.second} unités)</p>`;
             affinitesHTML += '</li>';
             if(topThree.thirdStr != "") {
                 affinitesHTML += '<li>';
                 affinitesHTML += `<span><img src="img/runes/lighter/${topThree.thirdStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
-                affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.thirdStr]}</p>`;
+                affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.thirdStr]} (${topThree.third} unités)</p>`;
                 affinitesHTML += '</li>';
             }
         }
@@ -293,5 +399,4 @@ function scrollToAnchor(anchor_id)
     var tag = $("#"+anchor_id);
     $('html,body').animate({scrollTop: tag.offset().top},1000);
 }
-
-// ANIMATION
+}
