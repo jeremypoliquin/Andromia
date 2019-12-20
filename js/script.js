@@ -65,9 +65,6 @@ function loadMainInfoBlock(explorateur)
     );
 
     loadUnits(explorateur.units);
-    
-
-    //loadLastUnites(explorateur.units);
     loadExplorations(explorateur.explorations);
     loadRunes(explorateur.runes);
     
@@ -86,6 +83,7 @@ function loadExplorations(explorations)
         success: function (data, status, xhr){
             $("#nbrExplo").text(data.length);
             console.log(data);
+            loadActivites(data);
 
             // Appel pour loader tous les unités dans ton bloc
         },
@@ -112,8 +110,63 @@ function loadExplorations(explorations)
             console.log(xhr);
         }
     });*/
+}
 
+function loadActivites(explorations)
+{
+    let activitesShowcase = "";
+
+    if(explorations.length > 3)
+    {
+        let exploTemp = [];
+        exploTemp.push(explorations[explorations.length-1], explorations[explorations.length-2], explorations[explorations.length-3] );
+        explorations = exploTemp;
+    }
+
+    let compteurContenu = 0;
+
+    for(var exploration in explorations)
+    {
+        var dateExplo = new Date(explorations[exploration].dateExploration);
+        console.log(exploration);
+        var dateExploStr =  dateExplo.getFullYear() 
+                            +"-"+ 
+                            (dateExplo.getMonth()+1) 
+                            +"-"+
+                            dateExplo.getDate();
+        if(explorations[exploration].unit != null && explorations[exploration].unit != undefined) {
+            activitesShowcase += "<li>";
+            activitesShowcase += `<img src="img/mighty-force.svg" class="small-img circle dark-red-color-bg" alt="hero"/>`;
+            activitesShowcase += `<p class="rounded-border dark-red-color-bg width-100"><span>${dateExploStr}:</span> Vous avez découvert une unité!</p>`;
+            activitesShowcase += "</li>";
+            compteurContenu++;
+            if(compteurContenu == 3)
+                break;
+        }
+        activitesShowcase += "<li>";
+        activitesShowcase += '<img src="img/binoculars.svg" class="small-img circle dark-red-color-bg" alt="exploration"/>';
+        activitesShowcase += `<p class="rounded-border dark-red-color-bg width-100"><span>${dateExploStr}:</span> Exploration réalisé!</p>`;
+        activitesShowcase += "</li>";
+        compteurContenu++;
+        if(compteurContenu == 3)
+                break;
+    }
     
+    $("#activites").append(activitesShowcase);
+    
+    /*
+    <li>
+        <img src="img/binoculars.svg" class="small-img circle dark-red-color-bg" alt="exploration"/>
+        <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Exploration réalisé!</p>
+    </li>
+    <li> 
+        <img src="img/portal.svg" class="small-img circle dark-red-color-bg" alt="portail"/>
+        <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Vous avez découvert un portail!</p>
+    </li>
+    <li>
+        <img src="img/mighty-force.svg" class="small-img circle dark-red-color-bg" alt="hero"/>
+        <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Vous avez découvert une unité!</p>
+    </li>*/
 }
 
 // Permet d'aller chercher les units
@@ -224,17 +277,17 @@ function CreerAffinites(units)
     if(topThree.firstStr != "") {
         affinitesHTML += '<li>';
         affinitesHTML += `<span><img src="img/runes/lighter/${topThree.firstStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
-        affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.firstStr]}</p>`;
+        affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.firstStr] } (${topThree.first} unités)</p>`;
         affinitesHTML += '</li>';
         if(topThree.secondStr != "") {
             affinitesHTML += '<li>';
             affinitesHTML += `<span><img src="img/runes/lighter/${topThree.secondStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
-            affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.secondStr]}</p>`;
+            affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.secondStr]} (${topThree.second} unités)</p>`;
             affinitesHTML += '</li>';
             if(topThree.thirdStr != "") {
                 affinitesHTML += '<li>';
                 affinitesHTML += `<span><img src="img/runes/lighter/${topThree.thirdStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
-                affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.thirdStr]}</p>`;
+                affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.thirdStr]} (${topThree.third} unités)</p>`;
                 affinitesHTML += '</li>';
             }
         }
