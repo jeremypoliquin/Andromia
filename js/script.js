@@ -35,6 +35,10 @@ function RetrieveGlobalInfo()
             console.log("echec");
         }
     });
+    /*
+    $.get(url, function(explorateur){
+        loadMainInfoBlock(explorateur);
+    });*/
 }
 
 function loadMainInfoBlock(explorateur)
@@ -56,7 +60,6 @@ function loadMainInfoBlock(explorateur)
     loadRunes(explorateur.runes);
     
 
-    let units = loadUnits(explorateur.units);
 }
 
 function loadExplorations(explorations)
@@ -79,25 +82,6 @@ function loadExplorations(explorations)
             console.log(xhr);
         }
     });
-    
-    // Laisser ça la
-    /*
-    $.ajax
-    ({
-        type: "GET",
-        url: "http://andromiaserver.us-3.evennode.com/units/5dfc04d09b8a95001ed8614a",
-        beforeSend : function( xhr ) {
-            xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
-        },
-        success: function (data, status, xhr){
-            console.log(data);
-
-            // Appel pour loader tous les unités dans ton bloc
-        },
-        error: function(xhr, status, error){
-            console.log(xhr);
-        }
-    });*/
 }
 
 function loadActivites(explorations)
@@ -141,20 +125,6 @@ function loadActivites(explorations)
     }
     
     $("#activites").append(activitesShowcase);
-    
-    /*
-    <li>
-        <img src="img/binoculars.svg" class="small-img circle dark-red-color-bg" alt="exploration"/>
-        <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Exploration réalisé!</p>
-    </li>
-    <li> 
-        <img src="img/portal.svg" class="small-img circle dark-red-color-bg" alt="portail"/>
-        <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Vous avez découvert un portail!</p>
-    </li>
-    <li>
-        <img src="img/mighty-force.svg" class="small-img circle dark-red-color-bg" alt="hero"/>
-        <p class="rounded-border dark-red-color-bg width-100"><span>2019-12-05:</span> Vous avez découvert une unité!</p>
-    </li>*/
 }
 
 // Permet d'aller chercher les units
@@ -169,8 +139,12 @@ function loadUnits(units)
         },
         success: function (data, status, xhr){
             $("#nbrUnites").text(data.length);
+            console.log(data);
             loadLastUnites(data);
             loadAllUnites(data);
+            let affinitesHTML = CreerAffinites(data);
+            $("#affinites").append(affinitesHTML);
+            // Appel pour loader tous les unités dans ton bloc
         },
         error: function(xhr, status, error){
             console.log(xhr);
@@ -216,15 +190,15 @@ function loadLastUnites(units)
     }
     for(var unit in units)
     {
-        var valNew = units[unit].href.split('/');
-        var id = valNew[4];
+        console.log(units[unit]);
         cardsShowcaseLast += '<div class="col-sm-4 card-box pd-5">';
         cardsShowcaseLast += '<div class="pd-5 darker-blue-bg">';
-        cardsShowcaseLast += '<h6 class="text-center font-weight-bold mb-3"><u>'+ units[unit].name +'</u></h6>';
-        cardsShowcaseLast += `<div><img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}"/></div>`;
+        cardsShowcaseLast += `<img class="img-card" alt="${units[unit].affinity}" src="${units[unit].imageURL}"/>`;
         cardsShowcaseLast += "</div></div>";
     }
     $("#cards-showcase-last").append(cardsShowcaseLast);
+    $(".img-card").mouseover(function(){ $(this).animate({ borderColor: COLOR_RUNES[$(this).attr("alt")]}, 'slow')});
+    $(".img-card").mouseout(function(){ $(this).animate({borderColor:"#34495e"}, 'fast') });
 }
 
 function loadAllUnites(units)
@@ -254,6 +228,12 @@ function loadAllUnites(units)
         $(this).animate({opacity: 1.0}, 500);
     });
 
+    if(($(".img-card").width() * 1.62) > 324) {
+        $(".img-card").height(324);
+        $(".img-card").width(200);
+    } else
+        $(".img-card").height($(".img-card").width() * 1.62);
+
     // Section pour afficher les détails d'une unit : 
     $(".img-card").click(function() {
 
@@ -263,6 +243,7 @@ function loadAllUnites(units)
         {
             var valNew = units[unit].href.split('/');
             var id = valNew[4];
+            console.log(units[unit].speed);
             if ($(this).attr("id") == id) {
 
                 $("#modalCarteCentreTitre").html(units[unit].name);                
@@ -290,3 +271,57 @@ function loadAllUnites(units)
         $(".modal").modal('show');
     });
 }
+
+function CreerAffinites(units)
+{
+    var arrayComparAffinity = {air:0,darkness:0,earth:0,energy:0,fire:0,life:0,light:0,logic:0,music:0,space:0,toxic:0,water:0};
+
+    units.forEach(unit => {
+        arrayComparAffinity[unit.affinity] += 1;
+    });
+
+    var topThree = {first:0, firstStr:"", second:0, secondStr:"", third:0, thirdStr:"" };
+
+    for(var rune in arrayComparAffinity) {
+        runeValue = arrayComparAffinity[rune];
+        if(runeValue > topThree.first) {
+            topThree.thirdStr = topThree.secondStr;
+            topThree.third = topThree.second;
+            topThree.secondStr = topThree.firstStr;
+            topThree.second = topThree.first;
+            topThree.firstStr = rune;
+            topThree.first = runeValue;
+        } else if(runeValue > topThree.second) {
+            topThree.thirdStr = topThree.secondStr;
+            topThree.third = topThree.second;
+            topThree.secondStr = rune;
+            topThree.second = runeValue;
+        } else if(runeValue > topThree.third)
+            topThree.thirdStr = rune;
+            topThree.third = runeValue;
+    }
+
+    let affinitesHTML = "";
+    
+    if(topThree.firstStr != "") {
+        affinitesHTML += '<li>';
+        affinitesHTML += `<span><img src="img/runes/lighter/${topThree.firstStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
+        affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.firstStr] } (${topThree.first} unités)</p>`;
+        affinitesHTML += '</li>';
+        if(topThree.secondStr != "") {
+            affinitesHTML += '<li>';
+            affinitesHTML += `<span><img src="img/runes/lighter/${topThree.secondStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
+            affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.secondStr]} (${topThree.second} unités)</p>`;
+            affinitesHTML += '</li>';
+            if(topThree.thirdStr != "") {
+                affinitesHTML += '<li>';
+                affinitesHTML += `<span><img src="img/runes/lighter/${topThree.thirdStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
+                affinitesHTML += `<p class="rounded-border dark-yellow-bg font-500">${NOM_RUNES_FR[topThree.thirdStr]} (${topThree.third} unités)</p>`;
+                affinitesHTML += '</li>';
+            }
+        }
+    }
+    return affinitesHTML;
+}
+
+// ANIMATION
