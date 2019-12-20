@@ -43,8 +43,8 @@ function RetrieveGlobalInfo()
 
 function loadMainInfoBlock(explorateur)
 {
-    $("#inox").text(explorateur.inox + " Inox");
-    $("#location").text("Location: " + explorateur.location);
+    $("#location").append("<span style='font-size:1.5rem; font-weight:bold;'>Location:</span><br>" + explorateur.location);
+    $("#inox").append("<span style='font-size:1.5rem; font-weight:bold;'>Inox:</span><br>" + explorateur.inox);
     $("#bienvenue").text("Bienvenue sur Andromia, " + explorateur.nom);
     let dateCreate = new Date(explorateur.dateCreation);
     $("#tempsMembre").text(
