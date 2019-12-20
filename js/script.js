@@ -228,12 +228,6 @@ function loadAllUnites(units)
         $(this).animate({opacity: 1.0}, 500);
     });
 
-    if(($(".img-card").width() * 1.62) > 324) {
-        $(".img-card").height(324);
-        $(".img-card").width(200);
-    } else
-        $(".img-card").height($(".img-card").width() * 1.62);
-
     // Section pour afficher les détails d'une unit : 
     $(".img-card").click(function() {
 
