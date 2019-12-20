@@ -6,9 +6,6 @@ let access_token;
 $( document ).ready(function() {
     var lastScrollTop = 0;
     access_token = localStorage.getItem("andromia");
-    prepareListener("profile");
-    prepareListener("map");
-    prepareListener("units");
     RetrieveGlobalInfo("1");
     
     $("#disconnect").click(function(){
@@ -295,6 +292,7 @@ function loadAllUnites(units)
     });
 }
 
+<<<<<<< HEAD
 function CreerAffinites(units)
 {
     var arrayComparAffinity = {air:0,darkness:0,earth:0,energy:0,fire:0,life:0,light:0,logic:0,music:0,space:0,toxic:0,water:0};
@@ -396,6 +394,8 @@ function prepareListener(name)
     });
 }
 
+=======
+>>>>>>> 8ad4175e3a463a8583991a1be7d7b56512272790
 function scrollToAnchor(anchor_id)
 {   
     var tag = $("#"+anchor_id);
