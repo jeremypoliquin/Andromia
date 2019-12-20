@@ -65,8 +65,7 @@ function loadMainInfoBlock(explorateur)
     );
 
     loadUnits(explorateur.units);
-    //let affinitesHTML = CreerAffinites(explorateur.units);
-    //$("#affinites").append(affinitesHTML);
+    
 
     //loadLastUnites(explorateur.units);
     loadExplorations(explorateur.explorations);
@@ -96,11 +95,11 @@ function loadExplorations(explorations)
     });
     
     // Laisser ça la
-    /* 
+    /*
     $.ajax
     ({
         type: "GET",
-        url: "http://andromiaserver.us-3.evennode.com/units/5dfc04d29b8a95001ed86159",
+        url: "http://andromiaserver.us-3.evennode.com/units/5dfc04d09b8a95001ed8614a",
         beforeSend : function( xhr ) {
             xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
         },
@@ -130,7 +129,8 @@ function loadUnits(units)
         success: function (data, status, xhr){
             $("#nbrUnites").text(data.length);
             loadLastUnites(data);
-
+            let affinitesHTML = CreerAffinites(data);
+            $("#affinites").append(affinitesHTML);
             // Appel pour loader tous les unités dans ton bloc
         },
         error: function(xhr, status, error){
