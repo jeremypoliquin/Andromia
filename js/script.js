@@ -278,9 +278,10 @@ function loadAllUnites(units)
 
                     i++;
                 }
-                cardDetails += `<img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}" width="75%" height="50%"/>
-                    <p class="text-right">Test</p>
-                `;
+
+                cardDetails += '<p>Capacités :</p>'
+                cardDetails += `<img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}" width="75%" height="50%"/>`;
+                cardDetails += '<p>' + units[unit].number + "-" + units[unit].set + '</p>';
             }
         }
 
