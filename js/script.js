@@ -6,7 +6,7 @@ let access_token;
 $( document ).ready(function() {
     var lastScrollTop = 0;
     access_token = localStorage.getItem("andromia");
-    RetrieveGlobalInfo("1");
+    RetrieveGlobalInfo();
     
     $("#disconnect").click(function(){
         localStorage.removeItem("andromia");
@@ -35,10 +35,6 @@ function RetrieveGlobalInfo()
             console.log("echec");
         }
     });
-    /*
-    $.get(url, function(explorateur){
-        loadMainInfoBlock(explorateur);
-    });*/
 }
 
 function loadMainInfoBlock(explorateur)
@@ -61,6 +57,7 @@ function loadMainInfoBlock(explorateur)
     
 
     let units = loadUnits(explorateur.units);
+}
 
 function loadExplorations(explorations)
 {
@@ -281,7 +278,9 @@ function loadAllUnites(units)
 
                     i++;
                 }
-                cardDetails += `<img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}" width="75%" height="50%"/>`;
+                cardDetails += `<img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}" width="75%" height="50%"/>
+                    <p class="text-right">Test</p>
+                `;
             }
         }
 
@@ -289,11 +288,4 @@ function loadAllUnites(units)
          
         $(".modal").modal('show');
     });
-}
-
-function scrollToAnchor(anchor_id)
-{   
-    var tag = $("#"+anchor_id);
-    $('html,body').animate({scrollTop: tag.offset().top},1000);
-}
 }
