@@ -1,7 +1,6 @@
 html, body{
     height: 100% !important;
     background: hsl(210, 29%, 24%);
-    overflow:hidden;
 }
 button:focus {outline:0;}
 
