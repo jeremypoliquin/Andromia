@@ -145,7 +145,7 @@ function loadActivites(explorations)
         }
         activitesShowcase += "<li>";
         activitesShowcase += '<img src="img/binoculars.svg" class="small-img circle dark-red-color-bg" alt="exploration"/>';
-        activitesShowcase += `<p class="rounded-border dark-red-color-bg width-100"><span>${dateExploStr}:</span> Exploration réalisé!</p>`;
+        activitesShowcase += `<p class="rounded-border dark-red-color-bg width-100"><span>${dateExploStr}:</span> Exploration réalisée!</p>`;
         activitesShowcase += "</li>";
         compteurContenu++;
         if(compteurContenu == 3)
