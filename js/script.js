@@ -181,6 +181,7 @@ function loadUnits(units)
         },
         success: function (data, status, xhr){
             $("#nbrUnites").text(data.length);
+            console.log(data);
             loadLastUnites(data);
             let affinitesHTML = CreerAffinites(data);
             $("#affinites").append(affinitesHTML);
@@ -267,13 +268,14 @@ function CreerAffinites(units)
             topThree.third = topThree.second;
             topThree.secondStr = rune;
             topThree.second = runeValue;
-        } else if(runeValue > topThree.third)
+        } else if(runeValue > topThree.third){
             topThree.thirdStr = rune;
             topThree.third = runeValue;
+        }
     }
 
     let affinitesHTML = "";
-    
+    console.log(topThree);
     if(topThree.firstStr != "") {
         affinitesHTML += '<li>';
         affinitesHTML += `<span><img src="img/runes/lighter/${topThree.firstStr}.svg" class="small-img circle dark-yellow-bg" alt="rune"/></span>`;
