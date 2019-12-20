@@ -190,15 +190,14 @@ function loadLastUnites(units)
     }
     for(var unit in units)
     {
-        console.log(units[unit]);
+        var valNew = units[unit].href.split('/');
+        var id = valNew[4];
         cardsShowcaseLast += '<div class="col-sm-4 card-box pd-5">';
         cardsShowcaseLast += '<div class="pd-5 darker-blue-bg">';
-        cardsShowcaseLast += `<img class="img-card" alt="${units[unit].affinity}" src="${units[unit].imageURL}"/>`;
+        cardsShowcaseLast += `<img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}"/>`;
         cardsShowcaseLast += "</div></div>";
     }
     $("#cards-showcase-last").append(cardsShowcaseLast);
-    $(".img-card").mouseover(function(){ $(this).animate({ borderColor: COLOR_RUNES[$(this).attr("alt")]}, 'slow')});
-    $(".img-card").mouseout(function(){ $(this).animate({borderColor:"#34495e"}, 'fast') });
 }
 
 function loadAllUnites(units)
@@ -254,8 +253,23 @@ function loadAllUnites(units)
                     i++;
                 }
 
-                cardDetails += '<p>Capacités :</p>'
+                var e = 1;
+                cardDetails += "<br> <br>";
+
+                for (var x = 0; x < units[unit].speed; x++) {
+
+                    cardDetails += ` <img class="img-card" alt="vie${x}" src="img/speed.svg" width="7%" height="5%"/>`;
+
+                    if (e == 8) {                        
+                        cardDetails += "<br>"; 
+                        e = 0;
+                    }
+
+                    i++;
+                }
+
                 cardDetails += `<img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}" width="75%" height="50%"/>`;
+
                 cardDetails += '<p>' + units[unit].number + "-" + units[unit].set + '</p>';
             }
         }
