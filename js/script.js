@@ -6,7 +6,7 @@ let access_token;
 $( document ).ready(function() {
     var lastScrollTop = 0;
     access_token = localStorage.getItem("andromia");
-    RetrieveGlobalInfo("1");
+    RetrieveGlobalInfo();
     
     $("#disconnect").click(function(){
         localStorage.removeItem("andromia");
@@ -35,10 +35,6 @@ function RetrieveGlobalInfo()
             console.log("echec");
         }
     });
-    /*
-    $.get(url, function(explorateur){
-        loadMainInfoBlock(explorateur);
-    });*/
 }
 
 function loadMainInfoBlock(explorateur)
@@ -61,6 +57,7 @@ function loadMainInfoBlock(explorateur)
     
 
     let units = loadUnits(explorateur.units);
+}
 
 function loadExplorations(explorations)
 {
@@ -282,7 +279,9 @@ function loadAllUnites(units)
 
                     i++;
                 }
-                cardDetails += `<img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}" width="75%" height="50%"/>`;
+                cardDetails += `<img class="img-card" id="${id}" alt="${units[unit].affinity}" src="${units[unit].imageURL}" width="75%" height="50%"/>
+                    <p class="text-right">Test</p>
+                `;
             }
         }
 
@@ -292,7 +291,6 @@ function loadAllUnites(units)
     });
 }
 
-<<<<<<< HEAD
 function CreerAffinites(units)
 {
     var arrayComparAffinity = {air:0,darkness:0,earth:0,energy:0,fire:0,life:0,light:0,logic:0,music:0,space:0,toxic:0,water:0};
@@ -394,11 +392,9 @@ function prepareListener(name)
     });
 }
 
-=======
->>>>>>> 8ad4175e3a463a8583991a1be7d7b56512272790
 function scrollToAnchor(anchor_id)
 {   
     var tag = $("#"+anchor_id);
     $('html,body').animate({scrollTop: tag.offset().top},1000);
 }
-}
+
